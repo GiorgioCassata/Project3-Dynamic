@@ -15,12 +15,12 @@ vector<vector<int>> Combinations(int n, vector<vector<int>> list) {
       return list;
     }
 
-    // add combination with just current day
+    // add combination of just current day
     list2.push_back({n});
 
     // add all previous combinations
     list2.insert(list2.end(), list.begin(), list.end());
-    // adding current day to all previous combinations
+    // add current day to all previous combinations
     for (int i = 1; i < list2.size(); ++i) {
         list2.at(i).push_back(n);
     }
