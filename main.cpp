@@ -130,16 +130,16 @@ int main() {
     }
     delete[] tempPrint;
 
-    /*
+
     // print combo list to console w/ sums
     for (int i = 0; i < list.size(); ++i) {
         for (int j = 0; j < list.at(i).size(); ++j) {
             cout << list.at(i).at(j) << ", ";
         }
-        cout << "   , " << sums.at(i) << endl;
+        cout << "   , " << sums[i] << endl;
     }
     cout << endl;
-    */
+
 
     // generate and save output to external file & print to console
     fout.open("output.txt");
