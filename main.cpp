@@ -78,20 +78,11 @@ int main() {
         }
     }
 
-    /*
-    // print out processes matrix
-    for (int i = 0; i < processes.size(); ++i) {
-        for (int j = 0; j < processes.at(i).size(); ++j) {
-            cout << processes.at(i).at(j) << ", ";
-        }
-        cout << endl;
-    }
-    */
-
+    // call recursive function to create combinations list
     list = Combinations(numDays-1, list);
     list.insert(list.begin(), {0});
 
-    int *sums = new int[list.size()];
+    int *sums = new int[list.size()]; // depends on list size
 
     // calculate possible sums using each combination
     for (int k = 0; k < list.size(); ++k) {
@@ -130,17 +121,6 @@ int main() {
     }
     delete[] tempPrint;
 
-    /*
-    // print combo list to console w/ sums
-    for (int i = 0; i < list.size(); ++i) {
-        for (int j = 0; j < list.at(i).size(); ++j) {
-            cout << list.at(i).at(j) << ", ";
-        }
-        cout << "   , " << sums[i] << endl;
-    }
-    cout << endl;
-    */
-
     // generate and save output to external file & print to console
     fout.open("output.txt");
     fout << sums[greatestIndex] << endl;
@@ -157,3 +137,25 @@ int main() {
 
     return 0;
 }
+
+
+    /*
+    // print out processes matrix
+    for (int i = 0; i < processes.size(); ++i) {
+        for (int j = 0; j < processes.at(i).size(); ++j) {
+            cout << processes.at(i).at(j) << ", ";
+        }
+        cout << endl;
+    }
+    */
+
+    /*
+    // print combo list to console w/ sums
+    for (int i = 0; i < list.size(); ++i) {
+        for (int j = 0; j < list.at(i).size(); ++j) {
+            cout << list.at(i).at(j) << ", ";
+        }
+        cout << "   , " << sums[i] << endl;
+    }
+    cout << endl;
+    */
