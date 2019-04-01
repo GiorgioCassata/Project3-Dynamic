@@ -7,7 +7,7 @@
 using namespace std;
 
 // A recursive function that builds all combinations of
-// days with no repeats and without considering order
+// days with no repeats and without considering order (Not Including 0)
 vector<vector<int>> Combinations(int n, vector<vector<int>> list) {
     vector<vector<int>> list2;
     // stop condition for recursion
@@ -34,40 +34,35 @@ vector<vector<int>> Combinations(int n, vector<vector<int>> list) {
 
 int main() {
     vector<vector<int>> list;
-    vector<int> x;
-    vector<int> s;
-
+    vector<int> x, s;
 
     int numDays;
-    int temp;
     int greatestIndex;
+    int temp;
+
     bool trigger;
     ifstream file;
     ofstream fout;
 
-    // read in and store into vectors, the x and s series  of numbers
+    // open input file in which the first entry is n = number of days
     file.open("input.txt");
     file >> numDays;
 
+    // initialize variables that depend on numDays
     vector<vector<int>> processes (numDays);
-    vector<int> sums (pow(numDays-1,2),0);
-    vector<int> tempPrint (numDays,0);
-    vector<int> toPrint (numDays,0);
+    int *toPrint = new int[numDays];
+    int *tempPrint = new int[numDays];
 
+    // read in and store into vectors, the x and s series  of numbers
     for (int i = 0; i < numDays; ++i) {
         file >> temp;
         x.push_back(temp);
-        //cout << temp << ", ";
     }
-    //cout << endl;
     for (int i = 0; i < numDays; ++i) {
         file >> temp;
         s.push_back(temp);
-        //cout << temp << ", ";
     }
-    //cout << endl;
     file.close();
-
 
     // calculate all possible processes possible just one time and store into matrix
     for (int i = 0; i < numDays; ++i) {
@@ -96,9 +91,12 @@ int main() {
     list = Combinations(numDays-1, list);
     list.insert(list.begin(), {0});
 
+    int *sums = new int[list.size()];
+
     // calculate possible sums using each combination
-    for (int k = 0; k < sums.size()-1; ++k) {
+    for (int k = 0; k < list.size(); ++k) {
         temp = 0;
+        sums[k] = 0;
         for (int i = 0; i < numDays; ++i) {
             trigger = false;
             for (int a = 0; a < list.at(k).size(); ++a) {
@@ -109,30 +107,31 @@ int main() {
                 }
             }
             if (trigger) {
-                tempPrint.at(i) = 0;
+                tempPrint[i] = 0;
                 continue;
             }
-            sums.at(k) += processes.at(i).at(temp);
-            tempPrint.at(i) = processes.at(i).at(temp);
+            sums[k] += processes.at(i).at(temp);
+            tempPrint[i] = processes.at(i).at(temp);
             temp++;
         }
         if (k > 1) {
-            if (sums.at(k) > sums.at(greatestIndex)) {
+            if (sums[k] > sums[greatestIndex]) {
                 greatestIndex = k;
                 for (int b = 0; b < numDays; ++b) {
-                    toPrint.at(b) = tempPrint.at(b);
+                    toPrint[b] = tempPrint[b];
                 }
             }
         } else {
             greatestIndex = k;
             for (int b = 0; b < numDays; ++b) {
-                toPrint.at(b) = tempPrint.at(b);
+                toPrint[b] = tempPrint[b];
             }
         }
     }
+    delete[] tempPrint;
 
     /*
-    // print list to console w/ sums
+    // print combo list to console w/ sums
     for (int i = 0; i < list.size(); ++i) {
         for (int j = 0; j < list.at(i).size(); ++j) {
             cout << list.at(i).at(j) << ", ";
@@ -141,12 +140,20 @@ int main() {
     }
     cout << endl;
     */
+
+    // generate and save output to external file & print to console
     fout.open("output.txt");
-    fout << sums.at(greatestIndex) << endl;
+    fout << sums[greatestIndex] << endl;
+    cout << sums[greatestIndex] << endl;
     for (int i = 0; i < numDays; ++i) {
-        fout << toPrint.at(i) << " ";
+        fout << toPrint[i] << " ";
+        cout << toPrint[i] << " ";
     }
-    //fout << endl;
     fout.close();
+    cout << endl;
+
+    delete[] toPrint;
+    delete[] sums;
+
     return 0;
 }
