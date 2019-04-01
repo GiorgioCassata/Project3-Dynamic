@@ -6,31 +6,14 @@
 
 using namespace std;
 
-// A recursive function that builds all combinations of
-// days with no repeats and without considering order (Not Including 0)
-vector<vector<int>> Combinations(int n, vector<vector<int>> list) {
-    vector<vector<int>> list2;
-    // stop condition for recursion
-    if (n == 0) {
-      return list;
+int sum(vector<int> a, int b, int c) {
+    int total = 0;
+    for (int i = b; i < c; ++i) {
+        total += a.at(i);
     }
 
-    // add combination of just current day
-    list2.push_back({n});
-
-    // add all previous combinations
-    list2.insert(list2.end(), list.begin(), list.end());
-    // add current day to all previous combinations
-    for (int i = 1; i < list2.size(); ++i) {
-        list2.at(i).push_back(n);
-    }
-
-    // combine current day combinations to previous combinations
-    list.insert(list.end(), list2.begin(), list2.end());
-    // recursive call to calculate combinations for next smaller size
-    return Combinations(n-1, list);
+    return total;
 }
-
 
 int main() {
     vector<vector<int>> list;
@@ -49,9 +32,8 @@ int main() {
     file >> numDays;
 
     // initialize variables that depend on numDays
-    vector<vector<int>> processes (numDays);
-    int *toPrint = new int[numDays];
-    int *tempPrint = new int[numDays];
+        //vector<vector<int>> processes (numDays);
+
 
     // read in and store into vectors, the x and s series  of numbers
     for (int i = 0; i < numDays; ++i) {
@@ -63,7 +45,7 @@ int main() {
         s.push_back(temp);
     }
     file.close();
-
+    /*
     // calculate all possible processes possible just one time and store into matrix
     for (int i = 0; i < numDays; ++i) {
         for (int j = 0; j < numDays; ++j) {
@@ -77,50 +59,83 @@ int main() {
             }
         }
     }
+    */
 
-    // call recursive function to create combinations list
-    list = Combinations(numDays-1, list);
-    list.insert(list.begin(), {0});
-
-    int *sums = new int[list.size()]; // depends on list size
-
-    // calculate possible sums using each combination
-    for (int k = 0; k < list.size(); ++k) {
-        temp = 0;
-        sums[k] = 0;
-        for (int i = 0; i < numDays; ++i) {
-            trigger = false;
-            for (int a = 0; a < list.at(k).size(); ++a) {
-                if (list.at(k).at(a)-1 == i) {
-                    temp = 0;
-                    trigger = true;
-                    break;
-                }
-            }
-            if (trigger) {
-                tempPrint[i] = 0;
-                continue;
-            }
-            sums[k] += processes.at(i).at(temp);
-            tempPrint[i] = processes.at(i).at(temp);
-            temp++;
-        }
-        if (k > 1) {
-            if (sums[k] > sums[greatestIndex]) {
-                greatestIndex = k;
-                for (int b = 0; b < numDays; ++b) {
-                    toPrint[b] = tempPrint[b];
-                }
-            }
-        } else {
-            greatestIndex = k;
-            for (int b = 0; b < numDays; ++b) {
-                toPrint[b] = tempPrint[b];
+    vector<vector<int>> processes (numDays);
+    vector<int> sum(numDays);
+    for (int i = 0; i < numDays; ++i) {
+        for (int j = 0; j < numDays; ++j) {
+            if (j >= i) {
+        	       processes.at(i).push_back(min(x[j], s[j-i]));
+    		      sum.at(i) += processes[i][j];
+            } else {
+                processes.at(i).push_back(0);
             }
         }
     }
-    delete[] tempPrint;
 
+    vector<int> decision(numDays);
+    int lastReboot = numDays-1;
+    int total1, total2;
+
+    //for every day, decide wheter or not to reboot the day before or not.
+    for(int j = numDays-1; j>0; j--){
+        total1 = 0;
+        for (int i = 0; i < lastReboot; ++i) {
+            total1 += processes.at(j).at(i);
+        }
+        total2 = 0;
+        for (int i = 0; i < lastReboot; ++i) {
+            total2 += processes.at(j-1).at(i);
+        }
+        cout << total1 << " " << total2 << endl;
+    	if (total1 < total2){ 	//where sum(*a,b,c) returns the sum of elements from index b to c in array a.
+    		decision[j-1] = 0;
+    	} else {
+    		decision[j-1] = 1;
+            lastReboot = j-1;
+        }
+    }
+
+    // print out processes matrix
+    for (int i = 0; i < numDays; ++i) {
+        for (int j = 0; j < numDays; ++j) {
+            cout << processes[i][j] << ", ";
+        }
+        cout << sum.at(i) << " " << decision.at(i);
+        cout << endl;
+    }
+
+    vector<int> output;
+    int row = 0;
+    for (int i = 0; i < numDays; ++i) {
+        if(decision.at(i) == 0) {
+            //cout << processes.at(row).at(i) << ' ';
+            output.push_back(processes.at(row).at(i));
+        } else {
+            //cout << 0 << ' ';
+            output.push_back(0);
+            row = i+1;
+        }
+    }
+    //cout << endl;
+    fout.open("output.txt");
+    int outSum = 0;
+    for (int i = 0; i < numDays; ++i) {
+        outSum += output.at(i);
+    }
+    cout << outSum << endl;
+    fout << outSum << endl;
+    for (int i = 0; i < numDays; ++i) {
+        cout << output.at(i) << ' ';
+        fout << output.at(i) << ' ';
+    }
+    cout << endl;
+    
+    fout.close();
+
+
+/*
     // generate and save output to external file & print to console
     fout.open("output.txt");
     fout << sums[greatestIndex] << endl;
@@ -132,9 +147,7 @@ int main() {
     fout.close();
     cout << endl;
 
-    delete[] toPrint;
-    delete[] sums;
-
+*/
     return 0;
 }
 
