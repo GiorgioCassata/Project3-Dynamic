@@ -1,0 +1,21 @@
+List = 0
+List = Function(n, List);
+
+// A recursive function that builds all combinations of
+// days with no repeats and without considering order
+Function(n, List):
+  // stop condition for recursion
+  if n is 1 then return List + 1
+
+  // add current day
+  List2 += n
+
+  // adding current day to all previous combinations
+  For element in List:
+    List2 += element + n
+
+  // recursive call to calculate combinations for next smaller size
+  return Function(n-1, List + List2)
+
+
+4,3,43,2,42,32,432,1,41,31,431,21,421,321,4321
