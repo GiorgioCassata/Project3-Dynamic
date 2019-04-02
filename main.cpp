@@ -88,7 +88,6 @@ int main() {
         for (int i = 0; i < lastReboot; ++i) {
             total2 += processes.at(j-1).at(i);
         }
-        cout << total1 << " " << total2 << endl;
     	if (total1 < total2){ 	//where sum(*a,b,c) returns the sum of elements from index b to c in array a.
     		decision[j-1] = 0;
     	} else {
@@ -97,6 +96,7 @@ int main() {
         }
     }
 
+    /*
     // print out processes matrix
     for (int i = 0; i < numDays; ++i) {
         for (int j = 0; j < numDays; ++j) {
@@ -105,6 +105,7 @@ int main() {
         cout << sum.at(i) << " " << decision.at(i);
         cout << endl;
     }
+    */
 
     vector<int> output;
     int row = 0;
@@ -130,45 +131,9 @@ int main() {
         cout << output.at(i) << ' ';
         fout << output.at(i) << ' ';
     }
+
     cout << endl;
-    
     fout.close();
 
-
-/*
-    // generate and save output to external file & print to console
-    fout.open("output.txt");
-    fout << sums[greatestIndex] << endl;
-    cout << sums[greatestIndex] << endl;
-    for (int i = 0; i < numDays; ++i) {
-        fout << toPrint[i] << " ";
-        cout << toPrint[i] << " ";
-    }
-    fout.close();
-    cout << endl;
-
-*/
     return 0;
 }
-
-
-    /*
-    // print out processes matrix
-    for (int i = 0; i < processes.size(); ++i) {
-        for (int j = 0; j < processes.at(i).size(); ++j) {
-            cout << processes.at(i).at(j) << ", ";
-        }
-        cout << endl;
-    }
-    */
-
-    /*
-    // print combo list to console w/ sums
-    for (int i = 0; i < list.size(); ++i) {
-        for (int j = 0; j < list.at(i).size(); ++j) {
-            cout << list.at(i).at(j) << ", ";
-        }
-        cout << "   , " << sums[i] << endl;
-    }
-    cout << endl;
-    */
