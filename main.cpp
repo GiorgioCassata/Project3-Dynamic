@@ -1,3 +1,10 @@
+/*  @Author: Giorgio Cassata, Dominick Dunn, Sushmita Patil
+ *
+ *  Description: Dynamic solution with O(n^2) complexity, but
+ *      unsure if it actually works 100% of the time
+ *
+*/
+
 #include <fstream>
 #include <iostream>
 #include <vector>
